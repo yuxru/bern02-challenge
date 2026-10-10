@@ -61,7 +61,7 @@ RESULTS_DIR = ROOT / "results"                      # tip: add "results/" and "d
 RESULTS_DIR.mkdir(exist_ok=True)
 
 HARTREE_TO_EV = 27.211386   # QM9 stores orbital energies in Hartree
-SEED = 42                   # same split and same model on every run
+SEED = 12                   # same split and same model on every run
 TEST_FRACTION = 0.20
 
 DROP_VARIABLES = ["n_small_rings", "n_0", "n_nitrile", "n_F", "molar_refractivity", "n_heavy_atoms", "n_ether", "tpsa"]

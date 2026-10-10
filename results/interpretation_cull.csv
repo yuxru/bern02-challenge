@@ -1,11 +1,11 @@
 ,importance (eV),expected,observed
-frac_sp3_carbon,0.813,+,+
-n_conjugated_bonds,0.238,-,-
-n_carbonyl,0.235,-,-
-max_partial_charge,0.135,?,+
-n_pi_electrons,0.122,-,+
-n_aromatic_rings,0.082,-,+
-n_rings,0.069,?,-
-n_N,0.064,-,-
-min_partial_charge,0.038,?,+
-n_O,0.009,-,-
+frac_sp3_carbon,0.821,+,+
+n_conjugated_bonds,0.249,-,-
+n_carbonyl,0.23,-,-
+n_pi_electrons,0.131,-,+
+max_partial_charge,0.124,?,+
+n_aromatic_rings,0.087,-,+
+n_rings,0.067,?,-
+n_N,0.066,-,-
+min_partial_charge,0.044,?,+
+n_O,0.011,-,-
