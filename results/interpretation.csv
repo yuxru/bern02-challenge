@@ -1,0 +1,18 @@
+,importance (eV),expected,observed
+frac_sp3_carbon,0.83,+,+
+n_conjugated_bonds,0.222,-,-
+n_carbonyl,0.218,-,-
+n_pi_electrons,0.129,-,+
+max_partial_charge,0.12,?,+
+n_aromatic_rings,0.076,-,+
+n_N,0.063,-,-
+n_rings,0.045,?,-
+min_partial_charge,0.031,?,+
+tpsa,0.024,?,+
+n_ether,0.014,-,+
+molar_refractivity,0.014,?,+
+n_heavy_atoms,0.013,?,-
+n_small_rings,0.006,-,-
+n_O,0.005,-,-
+n_nitrile,0.002,-,+
+n_F,0.001,?,+
