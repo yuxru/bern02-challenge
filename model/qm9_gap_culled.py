@@ -1,5 +1,5 @@
 """
-REFERENCE GUIDE (not for submission) - HOMO-LUMO gap of QM9 molecules, simple version
+HOMO-LUMO gap of QM9 molecules, culled version
 =====================================================================================
 
 Pipeline:
@@ -64,9 +64,7 @@ HARTREE_TO_EV = 27.211386   # QM9 stores orbital energies in Hartree
 SEED = 42                   # same split and same model on every run
 TEST_FRACTION = 0.20
 
-# Variables YOU decide to remove after looking at the correlation table in step 4.
-# Example: DROP_VARIABLES = ["n_pi_electrons"]
-DROP_VARIABLES = []
+DROP_VARIABLES = ["n_small_rings", "n_0", "n_nitrile", "n_F", "molar_refractivity", "n_heavy_atoms", "n_ether", "tpsa"]
 
 
 # %% ---------------------------------------------------------------------------------
@@ -206,7 +204,7 @@ pairs.columns = ["variable_1", "variable_2", "rho"]
 pairs = pairs.reindex(pairs["rho"].abs().sort_values(ascending=False).index)
 print("Most correlated variable pairs (training set):")
 print(pairs.head(10).round(2).to_string(index=False))
-rho.round(2).to_csv(RESULTS_DIR / "correlation_train.csv")
+rho.round(2).to_csv(RESULTS_DIR / "correlation_train_cull.csv")
 
 # Apply YOUR decision from the settings block.
 features = [name for name in X.columns if name not in DROP_VARIABLES]
@@ -255,7 +253,7 @@ ax.set_ylabel("Predicted gap [eV]")
 ax.set_title(f"Test set, MAE = {scores.loc['gradient boosting', 'MAE (eV)']:.2f} eV")
 fig.colorbar(hb, label="molecules per hexagon")
 fig.tight_layout()
-fig.savefig(RESULTS_DIR / "parity_plot.png", dpi=200)
+fig.savefig(RESULTS_DIR / "parity_plot_cull.png", dpi=200)
 
 
 # %% ---------------------------------------------------------------------------------
@@ -289,14 +287,14 @@ ax.barh(ordered.index, ordered.values, color="#3b6ea8")
 ax.set_xlabel("Increase in test MAE when shuffled [eV]")
 ax.set_title("Which variables does the model rely on?")
 fig.tight_layout()
-fig.savefig(RESULTS_DIR / "permutation_importance.png", dpi=200)
+fig.savefig(RESULTS_DIR / "permutation_importance_cull.png", dpi=200)
 
 
 # %% ---------------------------------------------------------------------------------
 # 8. Save results (figures and later comparisons can be redone without retraining)
 # ------------------------------------------------------------------------------------
 pd.DataFrame({"qm9_index": id_test.to_numpy(), "gap_dft_eV": y_test,
-              "gap_pred_eV": y_pred}).to_csv(RESULTS_DIR / "test_predictions.csv", index=False)
-scores.to_csv(RESULTS_DIR / "test_scores.csv")
-summary.to_csv(RESULTS_DIR / "interpretation.csv")
+              "gap_pred_eV": y_pred}).to_csv(RESULTS_DIR / "test_predictions_cull.csv", index=False)
+scores.to_csv(RESULTS_DIR / "test_scores_cull.csv")
+summary.to_csv(RESULTS_DIR / "interpretation_cull.csv")
 print("Done. Results in", RESULTS_DIR)
