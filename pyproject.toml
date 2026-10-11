@@ -14,6 +14,7 @@ dependencies = [
     "requests>=2.34.2",
     "scikit-learn>=1.9.1",
     "scipy>=1.18.1",
+    "shap>=0.53.0",
 ]
 
 [project.scripts]

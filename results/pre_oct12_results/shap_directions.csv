@@ -1,0 +1,18 @@
+,mean |SHAP| (eV),expected,observed
+frac_sp3_carbon,0.662,+,+
+n_carbonyl,0.173,-,-
+n_conjugated_bonds,0.158,-,-
+max_partial_charge,0.104,?,+
+n_aromatic_rings,0.069,-,+
+n_N,0.055,-,-
+n_rings,0.044,?,-
+n_small_rings,0.035,-,-
+n_heavy_atoms,0.033,?,-
+n_pi_electrons,0.029,-,-
+min_partial_charge,0.026,?,-
+molar_refractivity,0.017,?,+
+tpsa,0.014,?,-
+n_ether,0.009,-,+
+n_O,0.007,-,-
+n_nitrile,0.005,-,+
+n_F,0.0,?,+
