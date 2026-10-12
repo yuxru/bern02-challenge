@@ -79,9 +79,9 @@ def find_repo_root():
 
 
 ROOT = find_repo_root()
-XYZ_DIR = ROOT / "data" / "dsgdb9nsd.xyz"
-UNCHARACTERIZED_FILE = ROOT / "data" / "uncharacterized.txt"
-RESULTS_DIR = ROOT / "results"
+XYZ_DIR = ROOT /"data"/"qm9"/"dsgdb9nsd.xyz"
+UNCHARACTERIZED_FILE = ROOT /"data"/"qm9"/"uncharacterized.txt"
+RESULTS_DIR = ROOT /"results"/"abc"
 RESULTS_DIR.mkdir(exist_ok=True)
 
 HARTREE_TO_EV = 27.211386

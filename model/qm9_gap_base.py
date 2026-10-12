@@ -54,9 +54,9 @@ def find_repo_root():
 
 
 ROOT = find_repo_root()
-XYZ_DIR = ROOT / "data" / "dsgdb9nsd.xyz"           # folder with one .xyz file per molecule
-UNCHARACTERIZED_FILE = ROOT / "data" / "uncharacterized.txt"
-RESULTS_DIR = ROOT / "results"                      # tip: add "results/" and "data/" to .gitignore
+XYZ_DIR = ROOT /"data"/"base"/"dsgdb9nsd.xyz"
+UNCHARACTERIZED_FILE = ROOT /"base"/"base"/"uncharacterized.txt"
+RESULTS_DIR = ROOT /"results"/"base"
 RESULTS_DIR.mkdir(exist_ok=True)
 
 HARTREE_TO_EV = 27.211386   # QM9 stores orbital energies in Hartree
