@@ -41,7 +41,6 @@ from sklearn.inspection import permutation_importance, partial_dependence
 
 RDLogger.DisableLog("rdApp.*")   # hide RDKit warnings for the few odd molecules
 
-
 def find_repo_root():
     """Walk up from the current folder until we find pyproject.toml (the uv project root).
     This makes the paths work whether you run from the terminal or cell by cell, where
