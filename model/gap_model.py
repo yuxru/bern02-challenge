@@ -26,7 +26,7 @@ import shap
 # file structure
 XYZ_DIR = Path("data/qm9/dsgdb9nsd.xyz")
 UNCHARACTERIZED_LIST = Path("data/qm9/uncharacterized.txt")
-RESULTS_DIR = Path("results/gap_3")
+RESULTS_DIR = Path("results/gap_4")
 # model
 HARTREE_TO_EV = 27.211386
 SEED = 42
@@ -105,6 +105,7 @@ PI_ELECTRONS = {Chem.BondType.DOUBLE: 2, Chem.BondType.TRIPLE: 4, Chem.BondType.
 
 def chem_vars(mol):
     # uses RDKit and other methods to extract SMILES_VARS from input molecule
+    # TODO: add line to measure longest conjugated chain of pi bonds
     bonds = list(mol.GetBonds())
     atoms = [a.GetSymbol() for a in mol.GetAtoms()]
     ring_sizes = [len(r) for r in mol.GetRingInfo().AtomRings()]
@@ -115,7 +116,6 @@ def chem_vars(mol):
         "n_pi_electrons": sum(PI_ELECTRONS.get(b.GetBondType(), 0) for b in bonds),
         "n_carbonyl": Descriptors.fr_C_O(mol),
         "n_nitrile": Descriptors.fr_nitrile(mol),
-        "n_ether": Descriptors.fr_ether(mol),
         "n_N": atoms.count("N"), "n_O": atoms.count("O"), "n_F": atoms.count("F"),
         "n_small_rings": sum(size <= 4 for size in ring_sizes),
         "n_rings": len(ring_sizes),
@@ -196,6 +196,10 @@ def fit_and_test(train, test, which=("A", "B", "C")):
         results[name] = {"model": model, "pred": pred, "mae": mean_absolute_error(y[test], pred)}
     return results, inputs
 
+def Luobin_model(train, test):
+    # make alternate regression? model
+    pass
+
 main, main_inputs = fit_and_test(train_pos, test_pos) # run regressions
 notice("Cell 7 finished: regression models done")
 
@@ -241,12 +245,29 @@ shap_df = pd.DataFrame(shap_values, columns=X_C.columns, index=X_shap.index)
 mean_abs = shap_df.abs().mean().sort_values(ascending=False)    # overall importance
 
 # permutation importance: shuffle 1 variable in the test set and measure how much the MAE grows.
-# model A (chemistry vars only) is used so the index aligns with `features`.
-model_A = main["A"]["model"]
-X_A_test = main_inputs["A"].iloc[test_pos]
-perm = permutation_importance(model_A, X_A_test, y_test, scoring="neg_mean_absolute_error",
-                              n_repeats=5, random_state=SEED)
-importance = pd.Series(perm.importances_mean, index=features)
+# model A (chemistry vars only) is used so the index aligns with features.
+model_C = main["C"]["model"]
+X_C_test = main_inputs["C"].iloc[test_pos]
+fp_columns = [c for c in X_C_test.columns if c.startswith("fp_")] # combine fp vars
+groups = {name: [name] for name in features}    # each chemistry variable on its own
+groups["Morgan fingerprints"] = fp_columns  # all fingerprint columns as one block
+# calculate mae, importance for each var left out:
+rng = np.random.default_rng(SEED)
+base_mae = mean_absolute_error(y_test, model_C.predict(X_C_test))
+importance = {}
+for group_name, columns in groups.items():
+    increases = []
+    for _ in range(5):      # 5 repeats
+        shuffled = X_C_test.copy()
+        order = rng.permutation(len(shuffled)) # random variable selected
+        shuffled[columns] = shuffled[columns].to_numpy()[order]
+        increases.append(mean_absolute_error(y_test, model_C.predict(shuffled)) - base_mae)
+    importance[group_name] = np.mean(increases)
+importance = pd.Series(importance)
+# shap grouping
+shap_groups = shap_df[features].copy()
+shap_groups["Morgan fingerprints"] = shap_df[fp_columns].sum(axis=1)   # total fingerprint effect per molecule
+shap_importance = shap_groups.abs().mean()  # average size of effect in eV
 
 # permutation importance bar chart (mirrors qm9_gap_culled figure)
 fig, ax = plt.subplots(figsize=(6, 5))
@@ -256,6 +277,18 @@ ax.set_xlabel("Increase in test MAE when shuffled [eV]")
 ax.set_title("Which variables does the model rely on?")
 fig.tight_layout()
 fig.savefig(RESULTS_DIR / "permutation_importance_cull.png", dpi=200)
+
+# shap and permutation importance shared plot
+fig, axes = plt.subplots(1, 2, figsize=(11, 5), sharey=True)
+order = shap_importance.sort_values().index
+axes[0].barh(order, importance[order], color="#3b6ea8")
+axes[0].set_xlabel("Increase in test MAE when shuffled [eV]")
+axes[0].set_title("Permutation importance (model C)")
+axes[1].barh(order, shap_importance[order], color="#009E73")
+axes[1].set_xlabel("Mean |SHAP value| [eV]")
+axes[1].set_title("SHAP importance (model C)")
+fig.tight_layout()
+fig.savefig(RESULTS_DIR / "importance_permutation_vs_shap.png", dpi=200)
 
 # SMILES-based variables' observed direction = sign of the rank correlation between a
 # variable's value and its SHAP contribution. Only meaningful for important variables.
@@ -308,7 +341,6 @@ families = {
     "saturated\n(no pi bonds)": (test_chem["n_pi_electrons"] == 0).to_numpy(),
     "aromatic": (test_chem["n_aromatic_rings"] > 0).to_numpy(),
     "carbonyl": (test_chem["n_carbonyl"] > 0).to_numpy(),
-    "nitrile": (test_chem["n_nitrile"] > 0).to_numpy(),
     "3/4-ring": (test_chem["n_small_rings"] > 0).to_numpy(),}
 abs_err = {k: np.abs(main[k]["pred"] - y_test) for k in "AC"}
 fig, ax = plt.subplots(figsize=(10.5, 4.5))
@@ -355,7 +387,7 @@ ax.legend()
 fig.tight_layout()
 fig.savefig(RESULTS_DIR / "learning_curves.png", dpi=200)
 
-notice("Cell 9 finished: fig3_substructure_gallery.png, error_by_family.png, learning_curves.png")
+notice("Cell 9 finished: fig3_substructure_gallery.png, error_by_family.png, learning_curves.png, importance_permutation_vs_shap.png")
 
 # %% Cell 10 --------------------------------------------------------------------------
 # 10 save results
