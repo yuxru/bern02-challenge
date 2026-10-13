@@ -1,0 +1,10 @@
+,mean |SHAP| (eV),expected,observed
+frac_sp3_carbon,0.653,+,+
+n_carbonyl,0.178,-,-
+n_conjugated_bonds,0.165,-,-
+max_partial_charge,0.113,?,+
+n_rings,0.07,?,-
+n_aromatic_rings,0.063,-,+
+n_N,0.057,-,-
+n_pi_electrons,0.031,-,-
+min_partial_charge,0.027,?,+

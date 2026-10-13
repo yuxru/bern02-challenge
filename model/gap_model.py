@@ -31,7 +31,7 @@ RESULTS_DIR = Path("results/gap_4")
 HARTREE_TO_EV = 27.211386
 SEED = 42
 TEST_FRACTION = 0.20
-DROP_VARIABLES = ["n_small_rings", "n_0", "n_F", "molar_refractivity", "n_heavy_atoms", "tpsa"]
+DROP_VARIABLES = ["n_small_rings", "n_0", "n_F", "molar_refractivity", "n_heavy_atoms", "tpsa", "n_O", "n_nitrile"]
 # Morgan fingerprint
 FP_RADIUS = 2       # Morgan radius 2: atom environments up to 2 bonds away
 FP_VOCAB_SIZE = 256     # keep the x most frequent training substructures
