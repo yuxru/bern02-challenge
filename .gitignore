@@ -7,5 +7,6 @@ __pycache__/
 .env
 *.log
 .venv/
-# ignore gw data folder
-# /data/gw
+# ignore large gw data files
+data/gw/*.yaml
+data/gw/*.csv
