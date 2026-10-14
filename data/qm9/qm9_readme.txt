@@ -25,7 +25,7 @@ This data set is publicly available at
 Files
 -----
 
-dsgdb9nsd.xyz.tar.bz2    - 133885 molecules with properties in XYZ-like format
+dsgdb9nsd.xyz.    - 133885 molecules with properties in XYZ-like format
 dsC7O2H10nsd.xyz.tar.bz2 - 6095 isomers of C7O2H10 with properties in XYZ-like format
 validation.txt           - 100 randomly drawn molecules from the 133885 set with enthalpies of formation
 uncharacterized.txt      - 3054 molecules from the 133885 set that failed a consistency check
