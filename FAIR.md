@@ -1,7 +1,7 @@
 # FAIR Reflection
 
 This project aimed to predict the DFT HOMO-LUMO gap of small organic molecules from SMILE-derived features. Using QM9 dataset, gradient-boosting with a Ridge regression. 
-And test model on aspirin molecule, which is larger than any QM9 samples, against an ORCA DFT reference. 
+We also test the model on aspirin, which is larger than any QM9 molecule, against an ORCA DFT reference; that calculation is still running at the time of submission.
 
 Below, each FAIR principle is dicussed for following objects:
 1. **data** input QM9 data and output prediction data.
@@ -23,22 +23,12 @@ the code is in a public GitHub repository, <https://github.com/yuxru/bern02-chal
 QM9 is openly downloadable from figshare (CC0 1.0). The README gives the download link and the expected layout (`data/qm9/dsgdb9nsd.xyz/`, `data/qm9/uncharacterized.txt`), and QM9's own format description (`data/qm9/qm9_readme.txt`) is kept in the repo. Our own results (tables, figures) are small and committed.
 
 **workflow**
-All code needed to reproduce the results is in the repository and uses free, open-source software: Python, RDKit, scikit-learn, SHAP, NumPy, pandas, Matplotlib.
-
-Two tools sit partly outside this:
-- **LGV** 
-Was used to build the aspirin structure.      
-LGV is being developed at Lund University
-and is not yet publicly released. To keep the workflow accessible without it, the `.xyz` file was exported, so every later step can be reproduced without LGV.
-
-- **ORCA** 
-Used for the aspirin DFT reference is free for academic use but cannot be redistributed. 
+All code needed to reproduce the results is in the repository and uses free, open-source software: Python, RDKit, scikit-learn, SHAP, NumPy, pandas, Matplotlib. Two exceptions: LGV (built at Lund University, not yet released), used to build aspirin, and ORCA (free for academics, not redistributable), used for the DFT reference. We therefore plan to commit the exported .xyz and the ORCA input/output files once the calculation has finished, so later steps can be reproduced or checked without either tool.
 
 ## I - Interoperable
 
 **data**
-Open formats only: `.xyz` (3D structure), SMILES (connectivity), CSV (tables), PNG (figures).
-Units are explicit (QM9's Hartree converted to eV in one documented line). QM9 and aspirin reference use the same level of theory, B3LYP/6-31G(2df,p) (ORCA keyword `B3LYP/G`, the Gaussian variant), so the gap values are directly comparable.
+open formats only: .xyz (3D structure), SMILES (connectivity), CSV (tables), PNG (figures). Units are explicit (QM9's Hartree converted to eV in one documented line). Our aspirin reference is set up with the same level of theory as QM9, B3LYP/6-31G(2df,p) (ORCA keyword B3LYP/G, the Gaussian variant), so the gap values will be directly comparable.
 
 **workflow**
 standard Python interfaces (RDKit molecules, pandas DataFrames, scikit-learn estimators). Features come from SMILES, so the trained model can be applied to any new molecule given as a SMILES string, as we do for aspirin.
@@ -53,6 +43,7 @@ code is MIT-licensed (`LICENSE`). `uv` locks the Python and package versions (`.
 
 ## Limitations
 
+- The ORCA reference for aspirin is not finished at submission, so the ML-vs-DFT comparison is not yet in the repository.
 - No Zenodo DOI yet, so the repository is findable but not yet permanent.
 - LGV is unreleased and ORCA cannot be redistributed: outsiders cannot build a new structure the same way or fully re-run the DFT step; inputs and outputs are shared instead.
 - The model only knows QM9 (≤ 9 heavy atoms; C, H, O, N, F; neutral molecules). Aspirin (13 heavy atoms) is extrapolation, which we document and quantify rather than hide.
