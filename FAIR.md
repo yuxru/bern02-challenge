@@ -20,7 +20,7 @@ the code is in a public GitHub repository, <https://github.com/yuxru/bern02-chal
 ## A - Accessible
 
 **data**
-QM9 is openly downloadable from figshare (CC0 1.0). We do not re-host the 133,885 raw `.xyz` files; the README gives the download link and the expected layout (`data/qm9/dsgdb9nsd.xyz/`, `data/qm9/uncharacterized.txt`), and QM9's own format description (`data/qm9/qm9_readme.txt`) is kept in the repo. Our own results (tables, figures) are small and committed.
+QM9 is openly downloadable from figshare (CC0 1.0). The README gives the download link and the expected layout (`data/qm9/dsgdb9nsd.xyz/`, `data/qm9/uncharacterized.txt`), and QM9's own format description (`data/qm9/qm9_readme.txt`) is kept in the repo. Our own results (tables, figures) are small and committed.
 
 **workflow**
 All code needed to reproduce the results is in the repository and uses free, open-source software: Python, RDKit, scikit-learn, SHAP, NumPy, pandas, Matplotlib.
