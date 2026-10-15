@@ -61,16 +61,11 @@ All data uses common, non-proprietart formats that other software can read:
 figures. Units are stated explicitly: QM9 stores orbital energies in Hartree, and it converted to eV (1 Ha = 27.211386 eV)for gap in a single, documented line of code.
 
 **workflow**
-Python libraries were used to analysis with standard interfaces: RDKit molecules,
+Python libraries were used for analysis with standard interfaces: RDKit molecules,
 pandas DataFrames, scikit-learn estimators, so individual steps such as the feature
 functions can be reused in other projects. Features are derived from SMILES, a standard format, so the trained model can be applied to any new molecule given as a SMILES string.
 
 ## R - Reusable 
 **data**
-1. **licence:** QM9 is CC0 1.0. output results and figures are shared under 
-   CC By 4.0 
-2. **Provenance:** the README and notebook document every cleaning step and how many molecules
-  each step removes:
-  all files read → molecules on the official *uncharacterized* list removed (failed geometry
-  check) → SMILES that RDKit cannot parse removed → duplicate structures (same canonical
-  SMILES) merged by averaging their gap.
+1. **licence:** QM9 is CC0 1.0. output results and figures are shared under CC BY 4.0 
+2. **Provenance:** the README and notebook document every cleaning step and how many molecules each step removes: all files read → molecules on the official *uncharacterized* list removed (failed geometry check) → SMILES that RDKit cannot parse removed → duplicate structures (same canonical SMILES) merged by averaging their gap.
