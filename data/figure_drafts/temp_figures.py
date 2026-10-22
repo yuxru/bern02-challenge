@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+from pathlib import Path
+import numpy as np
+
  
 # Test-set results for the DFT (B3LYP) target, typed in from the results table
 results = pd.DataFrame(
@@ -35,4 +38,43 @@ fig.legend(handles, models.index, loc="lower center", ncol=4, frameon=False)
 fig.tight_layout(rect=(0, 0.08, 1, 0.95))                   # leave room for legend + title
 fig.savefig("dft_test_performance.png", dpi=300)
 plt.show()
- 
+
+# %% shap
+# Compare DFT- and GW-target model C: grouped SHAP importance from both notebooks
+
+
+RUNS = {"DFT (B3LYP)": Path("results/gap_5"),      # RESULTS_DIR of gap_model.ipynb
+        "GW": Path("results/gap_gw")}              # RESULTS_DIR of gap_model_gw.ipynb
+COLORS = {"DFT (B3LYP)": "#5B8DB8", "GW": "#D6B656"}
+SHOW_SHARE = False   # True = each variable's share of the total, instead of eV
+
+# both notebooks must have explained the same molecules, otherwise the comparison is unfair
+samples = [pd.read_csv(d / "shap_molecules.csv")["qm9_index"] for d in RUNS.values()]
+assert samples[0].equals(samples[1]), "The two notebooks explained different molecules"
+
+shap_by_target = pd.DataFrame({target: pd.read_csv(d / "shap_grouped_importance.csv", index_col=0).iloc[:, 0]
+                               for target, d in RUNS.items()})
+
+if SHOW_SHARE:
+    plot_df, xlabel, fmt = shap_by_target / shap_by_target.sum() * 100, "Share of total SHAP importance [%]", "%.0f%%"
+else:
+    plot_df, xlabel, fmt = shap_by_target, "Mean |SHAP value| [eV]", "%.2f"
+
+order = plot_df.mean(axis=1).sort_values().index            # most important at the top
+y = np.arange(len(order))
+height = 0.38                                              # two bars per row
+
+fig, ax = plt.subplots(figsize=(9, 6))
+for i, target in enumerate(plot_df.columns):
+    bars = ax.barh(y + (0.5 - i) * height, plot_df.loc[order, target], height=height,
+                   color=COLORS[target], label=target)
+    ax.bar_label(bars, fmt=fmt, padding=3, fontsize=9)
+ax.set_yticks(y, order)
+ax.set_xlabel(xlabel)
+ax.set_title("Which inputs drive the predicted gap? (model C, SHAP)")
+handles, labels = ax.get_legend_handles_labels()
+ax.legend(handles, labels, title="Target", frameon=False, loc="lower right")
+ax.spines[["top", "right"]].set_visible(False)
+fig.tight_layout()
+fig.savefig("shap_importance_dft_vs_gw.png", dpi=200)
+print(shap_by_target.round(3))
